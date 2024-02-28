@@ -21,8 +21,3 @@ bool JsonSchemaValidator::validate() {
     }
     return true;
 }
-
-void User::setupValidators() {
-            validators["name"] = std::make_shared<LengthValidator>(3, 15);
-            validators["email"] = std::make_shared<RegexValidator>("^(\\w+)(\\.\\w+)*@(\\w+)(\\.(\\w+))+");
-}

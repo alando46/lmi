@@ -6,8 +6,12 @@
 class User : public JsonSchemaValidator {
     public:
         User(const nlohmann::json& j) : JsonSchemaValidator(j) {}
-        void setupValidators() override;
+        void setupValidators() override {
+            validators["name"] = std::make_shared<LengthValidator>(3, 15);
+            validators["email"] = std::make_shared<RegexValidator>("^(\\w+)(\\.\\w+)*@(\\w+)(\\.(\\w+))+");
+        }
 };
+
 
 TEST_CASE("User validator works on email" ) {
 
