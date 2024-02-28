@@ -11,7 +11,6 @@ CMakeUserPresets.json
 ################################
 build/
 html/
-lectures/
 .mypy_cache/
 .ruff_cache/
 

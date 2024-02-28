@@ -1,18 +1,42 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 
-#include "my_lib.h"
+#include "validator.h"
 
-TEST_CASE("Factorials are computed", "[factorial]")
-{
-    REQUIRE(factorial(0) == 1);
-    REQUIRE(factorial(1) == 1);
-    REQUIRE(factorial(2) == 2);
-    REQUIRE(factorial(3) == 6);
-    REQUIRE(factorial(10) == 3628800);
+TEST_CASE("User validator works on email" ) {
+
+    SECTION("basic validation passes") {
+        nlohmann::json j = R"({"name": "John Doe", "email": "john.doe@example.com"})"_json;
+        User user(j);
+        REQUIRE(user.isValid());
+    }
+    SECTION("Invalid object fails invalid email") {
+        nlohmann::json j = R"({"name": "John Doe", "email": "emailatexample.com"})"_json;
+        User user(j);
+        REQUIRE(!user.isValid());
+    }
+    SECTION("Invalid object fails invalid email") {
+        nlohmann::json j = R"({"name": "John Doe", "email": "e@mail@example.com"})"_json;
+        User user(j);
+        REQUIRE(!user.isValid());
+    }
 }
 
-TEST_CASE("Test printer function", "[print_hello_world]")
-{
-    REQUIRE(print_hello_world() == 1);
+TEST_CASE("User validator works on name") {
+    SECTION("Name valid length") {
+    nlohmann::json j = R"({"name": "John Doe", "email": "john.doe@example.com"})"_json;
+    User user(j);
+    REQUIRE(user.isValid());
+    }
+
+    SECTION("Name too short") {
+    nlohmann::json j = R"({"name": "Jd", "email": "john.doe@example.com"})"_json;
+    User user(j);
+    REQUIRE(!user.isValid());
+    }
+    SECTION("Name too long") {
+    nlohmann::json j = R"({"name": "Jasdfgasdfgasdfgasdfgasdfgasdfgasdfgasdfgasdfgasdfg", "email": "john.doe@example.com"})"_json;
+    User user(j);
+    REQUIRE(!user.isValid());
+    }
 }
