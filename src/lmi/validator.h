@@ -42,9 +42,3 @@ class JsonSchemaValidator {
             return validate();
         }
 };
-
-class User : public JsonSchemaValidator {
-    public:
-        User(const nlohmann::json& j) : JsonSchemaValidator(j) {}
-        void setupValidators() override;
-};

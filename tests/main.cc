@@ -3,6 +3,12 @@
 
 #include "validator.h"
 
+class User : public JsonSchemaValidator {
+    public:
+        User(const nlohmann::json& j) : JsonSchemaValidator(j) {}
+        void setupValidators() override;
+};
+
 TEST_CASE("User validator works on email" ) {
 
     SECTION("basic validation passes") {
