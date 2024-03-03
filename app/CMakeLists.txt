@@ -7,8 +7,8 @@ target_link_libraries(
     PRIVATE ${LIBRARY_NAME}
             nlohmann_json::nlohmann_json
             fmt::fmt
-            spdlog::spdlog
-            cxxopts::cxxopts)
+            spdlog::spdlog)
+            # cxxopts::cxxopts)
 
 if(${ENABLE_WARNINGS})
     target_set_warnings(
