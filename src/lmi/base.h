@@ -77,37 +77,47 @@ struct Reflective {
 };
 
 
-
-
+#include <nlohmann/json.hpp>
+#include <stdexcept>
+#include <string>
 
 struct Person : public Reflective {
     std::string name;
     int age;
     double height;
 
+    // Constructor with direct values
     Person(const std::string& inputName, int inputAge, double inputHeight) {
-        auto validateName = [](const std::string& val) -> std::string {
-            if (val.empty())
-                throw std::invalid_argument("Name cannot be empty");
-            return val;
-        };
+        name = validateName(inputName);
+        age = validateAge(inputAge);
+        height = validateHeight(inputHeight);
+    }
 
-        auto validateAge = [](int val) -> int {
-            if (val < 0 || val > 150)
-                throw std::invalid_argument("Age must be between 0 and 150");
-            return val;
-        };
+    // Constructor from nlohmann::json object
+    Person(const nlohmann::json& json) {
+        name = validateName(json.at("name").get<std::string>());
+        age = validateAge(json.at("age").get<int>());
+        height = validateHeight(json.at("height").get<double>());
+    }
 
-        auto validateHeight = [](double val) -> double {
-            if (val < 0.0 || val > 3.0)
-                throw std::invalid_argument("Height must be between 0.0 and 3.0 meters");
-            return val;
-        };
+private:
+    // Validation functions
+    static std::string validateName(const std::string& val) {
+        if (val.empty())
+            throw std::invalid_argument("Name cannot be empty");
+        return val;
+    }
 
-        // Validate and assign
-        this->name = validateName(inputName);
-        this->age = validateAge(inputAge);
-        this->height = validateHeight(inputHeight);
+    static int validateAge(int val) {
+        if (val < 0 || val > 150)
+            throw std::invalid_argument("Age must be between 0 and 150");
+        return val;
+    }
+
+    static double validateHeight(double val) {
+        if (val < 0.0 || val > 3.0)
+            throw std::invalid_argument("Height must be between 0.0 and 3.0 meters");
+        return val;
     }
 };
 

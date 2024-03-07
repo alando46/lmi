@@ -9,6 +9,7 @@
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 #include <boost/hana.hpp>
+#include <cpr/cpr.h>
 
 
 #include "config.hpp"
@@ -32,26 +33,99 @@ int main(int argc, char **argv)
               << "." << SPDLOG_VER_PATCH << '\n';
 
     // create an empty structure (null)
-    json j;
-    j["name"] = "bill";
-    j["age"] = -18;
-    j["height"] = 3.5;
+    json bobJson;
+    bobJson["name"] = "bob";
+    bobJson["age"] = 18;
+    bobJson["height"] = 2.5;
 
+    // cpr::Response r = cpr::Get(cpr::Url{"http://www.httpbin.org/get"});
+
+    // std::cout << r.url << std::endl; // http://www.httpbin.org/get
+    // std::cout << r.status_code << std::endl; // 200
+    // std::cout << r.header["content-type"] << std::endl; // application/json
+    // std::cout << r.text << std::endl;
+
+
+    Person bob{bobJson};
+
+    std::cout << to_json(bob) << std::endl;
 
     Person bill{"bill", 15, 2.5};
 
-    auto tuple = hana::make_tuple(bill);
-
     std::cout << to_json(bill) << std::endl;
 
-    // bill.update(j);
-    // json test_out = bill.to_json();
 
-    // std::cout << test_out << std::endl;
+    // Your OpenAI API key
+    std::string apiKey = "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";
 
-    // std::cout << "hi0" << std::endl;
+    // Headers
+    cpr::Header headers = {
+        {"Content-Type", "application/json"},
+        {"Authorization", "Bearer " + apiKey}
+    };
+
+    // Constructing the JSON payload using nlohmann::json
+    nlohmann::json jsonPayload = {
+        {"model", "gpt-3.5-turbo"},
+        {"messages", {
+            {
+                {"role", "user"},
+                {"content", "What is the weather like in Boston?"}
+            }
+        }},
+        {"tools", {
+            {
+                {"type", "function"},
+                {"function", {
+                    {"name", "get_current_weather"},
+                    {"description", "Get the current weather in a given location"},
+                    {"parameters", {
+                        {"type", "object"},
+                        {"properties", {
+                            {"location", {
+                                {"type", "string"},
+                                {"description", "The city and state, e.g. San Francisco, CA"}
+                            }},
+                            {"unit", {
+                                {"type", "string"},
+                                {"enum", {"celsius", "fahrenheit"}}
+                            }}
+                        }},
+                        {"required", {"location"}}
+                    }}
+                }}
+            }
+        }},
+        {"tool_choice", "auto"}
+    };
+    // Make the POST request
+    cpr::Response r = cpr::Post(
+        cpr::Url{"https://api.openai.com/v1/chat/completions"},
+        headers,
+        cpr::Body{jsonPayload.dump()} // Convert JSON object to string format
+    );
+
+    // Check the response status and print the response text
+    if (r.status_code == 200) {
+        // Parse the response text into a JSON object
+        nlohmann::json responseJson = nlohmann::json::parse(r.text);
+
+        // Extract function calls from the response
+        if (!responseJson["choices"].empty() && !responseJson["choices"][0]["message"]["tool_calls"].empty()) {
+            auto toolCalls = responseJson["choices"][0]["message"]["tool_calls"];
+
+            for (auto& call : toolCalls) {
+                // Each `call` is now a nlohmann::json object representing a function call
+                std::cout << "Function Call: " << call.dump(4) << std::endl;
+            }
+        } else {
+            std::cout << "No function calls found in the response." << std::endl;
+        }
+    } else {
+        std::cout << "Failed to get response. Status code: " << r.status_code << std::endl;
+    }
+
     return 0;
-
 }
 //     // std::cout << "FMT: " << FMT_VERSION << '\n';
 //     // std::cout << "CXXOPTS: " << CXXOPTS__VERSION_MAJOR << "."
