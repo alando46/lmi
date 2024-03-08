@@ -48,11 +48,11 @@ int main(int argc, char **argv)
 
     Person bob{bobJson};
 
-    std::cout << to_json(bob) << std::endl;
+    // std::cout << to_json(bob) << std::endl;
 
     Person bill{"bill", 15, 2.5};
 
-    std::cout << to_json(bill) << std::endl;
+    // std::cout << to_json(bill) << std::endl;
 
 
     // Your OpenAI API key
@@ -104,11 +104,13 @@ int main(int argc, char **argv)
         headers,
         cpr::Body{jsonPayload.dump()} // Convert JSON object to string format
     );
-
+    std::cout << r.text << std::endl;
     // Check the response status and print the response text
     if (r.status_code == 200) {
         // Parse the response text into a JSON object
         nlohmann::json responseJson = nlohmann::json::parse(r.text);
+        std::cout<< "hihihihi" << std::endl;
+        std::cout << responseJson << std::endl;
 
         // Extract function calls from the response
         if (!responseJson["choices"].empty() && !responseJson["choices"][0]["message"]["tool_calls"].empty()) {
