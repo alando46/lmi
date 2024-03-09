@@ -15,17 +15,8 @@ public:
 class IntValidationError : public BaseValidationError {
 public:
     // Constructor that takes an error message and the invalid integer value
-    IntValidationError(const std::string& message, int invalidValue, std::string& argName)
-        : BaseValidationError(message), invalidValue_(invalidValue), argName_(argName) {}
-
-    // Getter for the invalid integer value
-    int getInvalidValue() const {
-        return invalidValue_;
-    }
-
-private:
-    int invalidValue_; // Store the invalid integer value that caused the error
-    std::string argName_;
+    IntValidationError(const std::string& message)
+        : BaseValidationError(message) {}
 };
 
 

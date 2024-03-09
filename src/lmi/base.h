@@ -8,6 +8,10 @@
 #include <functional>
 #include <stdexcept>
 #include <string>
+#include <vector>
+#include <algorithm> // For std::transform
+#include <iostream>
+#include <iterator> // For std::back_inserter
 
 
 namespace hana = boost::hana;
@@ -45,16 +49,16 @@ std::string> to_json(T const& x) {
   return "{" + join(std::move(json), ", ") + "}";
 }
 
-struct BaseFunction {
-    public:
-        virtual ~BaseFunction();
-        virtual validate() const = 0;
-    protected:
-        std::vector<BaseValidationError> errors;
-        void validate_() {
-            json raw_input = to_json(this);
-        }
-};
+// struct BaseFunction {
+//     public:
+//         virtual ~BaseFunction();
+//         virtual validate() const = 0;
+//     protected:
+//         std::vector<BaseValidationError> errors;
+//         void validate_() {
+//             json raw_input = to_json(this);
+//         }
+// };
 
 
 
@@ -63,31 +67,59 @@ struct BaseFunction {
 // }
 
 
-hana::for_each(john, [](auto pair) {
-  std::cout << hana::to<char const*>(hana::first(pair)) << ": "
-            << hana::second(pair) << std::endl;
-});
+// hana::for_each(john, [](auto pair) {
+//   std::cout << hana::to<char const*>(hana::first(pair)) << ": "
+//             << hana::second(pair) << std::endl;
+// });
 
+
+// int square(int x) {
+//     return x * x;
+// }
+
+// int main() {
+//     std::vector<int> numbers = {1, 2, 3, 4, 5};
+//     std::vector<int> squaredNumbers;
+
+//     std::transform(numbers.begin(), numbers.end(), std::back_inserter(squaredNumbers), square);
+
+//     // Printing the squared numbers
+//     for (int num : squaredNumbers) {
+//         std::cout << num << " ";
+//     }
+//     std::cout << std::endl;
+
+//     return 0;
+// }
 
 class Person {
     public:
-    BOOST_HANA_DEFINE_STRUCT(Persion,
-       (std::string, name),
-        (int, age),
-        (double, height)
-    );
+        BOOST_HANA_DEFINE_STRUCT(Person,
+        (std::string, name),
+            (int, age),
+            (double, height)
+        );
     private:
+        std::
         std::vector<BaseValidationError> validationErrors_;
         template<typename T>
-        void validateField(std::string attribName, T value, callable validators) {
-            // TODO: DEFINE SOME MAP IMPLEMENTATINO WHERE WE CHECK EACH VALIDATOR IN THE LIST
-        }
+        std::vector<BaseValidationError> validateField(
+                    std::string& attribName,
+                    T& value,
+                    const std::vector<std::function<std::optional<BaseValidationError>(T)&>> validators
+                ) {
+
+            for (validator : validators) {
+                auto validationResult = validator.validate(dataToValidate);
+                if (validationResult) {
+                    validationErrors_.push_back(validationResult)
+                }
+            }
+
         void validate() {
             hana::for_each(this, [](auto pair)){
                 std::string attribName = hana::to<char const*>(hana::first(pair));
-                //TODO ADD TYPE FOR FIELDVALIDATORS
-                fieldValidators = validators_[attribName];
-                validateField(attribName, hana::second(pair), fieldValidators);
+                validateField(attribName, hana::second(pair), validators_[attribName]);
             }
         }
         // Constructor with direct values
