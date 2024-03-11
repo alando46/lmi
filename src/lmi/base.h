@@ -92,6 +92,20 @@ std::string> to_json(T const& x) {
 //     return 0;
 // }
 
+
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include <variant>
+
+int main() {
+    // Define the variant to hold int, float, and string types
+    using Value = std::variant<int, float, std::string>;
+
+    // Create an unordered_map with string keys and Value as the value type
+    std::unordered_map<std::string, Value> unstructuredMap;
+// TODO:
+// ADD LT VALIDATOR TO VALIDATOR FUNCTION AND GET PERSON TO VALIDATE
 class Person {
     public:
         BOOST_HANA_DEFINE_STRUCT(Person,
@@ -100,7 +114,10 @@ class Person {
             (double, height)
         );
     private:
-        std::
+        // Define a type for a generic validator function.
+        // Note: This uses std::any for input, requiring runtime type checking.
+        using ValidatorFunction = std::function<std::optional<BaseValidationError>(const std::any&)>;
+        std::unordered_map<std::string, ValidatorFunction> validators;
         std::vector<BaseValidationError> validationErrors_;
         template<typename T>
         std::vector<BaseValidationError> validateField(

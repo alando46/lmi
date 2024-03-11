@@ -46,12 +46,12 @@ int main(int argc, char **argv)
     // std::cout << r.text << std::endl;
 
 
-    Person bob{bobJson};
+    // Person bob{bobJson};
 
     // std::cout << to_json(bob) << std::endl;
 
-    Person bill{"bill", 15, 2.5};
-
+    // Person bill{"bill", 15, 2.5};
+    auto bill = Person::create("bill", 15, 2.5)
     // std::cout << to_json(bill) << std::endl;
 
 
