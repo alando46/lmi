@@ -6,7 +6,7 @@ project(
     LANGUAGES CXX)
 
 # Global CMake variables are set here
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -44,12 +44,11 @@ include(AddGitSubmodule)
 include(Docs)
 include(Tools)
 
-if(ENABLE_WARNINGS)
-    include(Warnings)
-endif()
+# if(ENABLE_WARNINGS)
+#     include(Warnings)
+# endif()
+include(Warnings)
 
-add_cmake_format_target()
-add_clang_format_target()
 
 if(ENABLE_SANITIZE_ADDR OR ENABLE_SANITIZE_UNDEF)
     include(Sanitizer)
@@ -67,25 +66,42 @@ endif()
 
 # EXTERNAL LIBRARIES
 
-# include(FetchContent)
-# FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
-#                          GIT_TAG 3b15fa82ea74739b574d705fea44959b58142eb8)
-# FetchContent_MakeAvailable(cpr)
-
+include(FetchContent)
+FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
+                         GIT_TAG 3b15fa82ea74739b574d705fea44959b58142eb8)
+FetchContent_MakeAvailable(cpr)
 
 message(STATUS "Using CPM")
 include(CPM)
-cpmaddpackage("gh:fmtlib/fmt#9.1.0")
-cpmaddpackage("gh:nlohmann/json@3.11.2")
-cpmaddpackage("gh:catchorg/Catch2@2.13.9")
-cpmaddpackage("gh:jarro2783/cxxopts@3.1.1")
-cpmaddpackage("gh:gabime/spdlog@1.11.0")
+cpmaddpackage("gh:fmtlib/fmt#10.2.1")
+# cpmaddpackage("gh:nlohmann/json@3.11.3")
+cpmaddpackage("gh:catchorg/Catch2@3.5.3")
+cpmaddpackage("gh:danielaparker/jsoncons@0.173.4")
+
+# cpmaddpackage("gh:pboettch/json-schema-validator#2.3.0")
+# cxx opts is a cli utility
+# cpmaddpackage("gh:jarro2783/cxxopts@3.1.1")
+cpmaddpackage("gh:gabime/spdlog@1.13.0")
+# cpmaddpackage("gh:boostorg/hana@1.7.0")
+
+# CPMAddPackage(
+#   NAME Hana
+#   GIT_REPOSITORY https://github.com/boostorg/hana.git
+#   GIT_TAG v1.7.0 # or a specific commit for a stable version
+#   DOWNLOAD_ONLY YES # Since it's header-only, we only need to download it, not build it
+# )
+
+# Since Hana is header-only, we only need to add its include directory
+# if(Hana_ADDED)
+#   add_library(BoostHana INTERFACE IMPORTED)
+#   target_include_directories(BoostHana INTERFACE ${Hana_SOURCE_DIR}/include)
+# endif()
+
 
 
 # SUB DIRECTORIES
 
 add_subdirectory(configured)
-add_subdirectory(external)
 add_subdirectory(src)
 add_subdirectory(app)
 add_subdirectory(tests)
