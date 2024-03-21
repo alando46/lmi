@@ -5,6 +5,7 @@ set(LIBRARY_SOURCES
 set(LIBRARY_HEADERS
     "${CMAKE_CURRENT_SOURCE_DIR}/validator.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/base.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/alt.h"
 )
 set(LIBRARY_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/configured_files/include" "${CMAKE_BINARY_DIR}/_deps/hana-src/include")
 
@@ -14,6 +15,7 @@ target_link_libraries(
     ${LIBRARY_NAME}
     PUBLIC nlohmann_json::nlohmann_json
             fmt::fmt
+            nlohmann_json_schema_validator
             )
 
 

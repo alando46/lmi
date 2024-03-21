@@ -15,12 +15,16 @@
 #include "config.hpp"
 #include "validator.h"
 #include "base.h"
+#include "alt.h"
 using json = nlohmann::json;
 namespace fs = std::filesystem;
 namespace hana = boost::hana;
 
 int main(int argc, char **argv)
 {
+
+    alt();
+
     std::cout << "JSON: " << NLOHMANN_JSON_VERSION_MAJOR << "."
               << NLOHMANN_JSON_VERSION_MINOR << "."
               << NLOHMANN_JSON_VERSION_PATCH << '\n';
@@ -51,8 +55,9 @@ int main(int argc, char **argv)
     // std::cout << to_json(bob) << std::endl;
 
     // Person bill{"bill", 15, 2.5};
-    auto bill = Person::create("bill", 15, 2.5)
-    // std::cout << to_json(bill) << std::endl;
+    float height = 2.5;
+    auto bill = Person::create("bill", 15, 2.0);
+    std::cout << to_json(bill) << std::endl;
 
 
     // Your OpenAI API key

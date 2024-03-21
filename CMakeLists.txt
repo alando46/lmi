@@ -74,25 +74,28 @@ FetchContent_MakeAvailable(cpr)
 message(STATUS "Using CPM")
 include(CPM)
 cpmaddpackage("gh:fmtlib/fmt#10.2.1")
-cpmaddpackage("gh:nlohmann/json@3.11.2")
+# cpmaddpackage("gh:nlohmann/json@3.11.3")
 cpmaddpackage("gh:catchorg/Catch2@3.5.3")
+cpmaddpackage("gh:danielaparker/jsoncons@0.173.4")
+
+# cpmaddpackage("gh:pboettch/json-schema-validator#2.3.0")
 # cxx opts is a cli utility
 # cpmaddpackage("gh:jarro2783/cxxopts@3.1.1")
 cpmaddpackage("gh:gabime/spdlog@1.13.0")
 # cpmaddpackage("gh:boostorg/hana@1.7.0")
 
-CPMAddPackage(
-  NAME Hana
-  GIT_REPOSITORY https://github.com/boostorg/hana.git
-  GIT_TAG v1.7.0 # or a specific commit for a stable version
-  DOWNLOAD_ONLY YES # Since it's header-only, we only need to download it, not build it
-)
+# CPMAddPackage(
+#   NAME Hana
+#   GIT_REPOSITORY https://github.com/boostorg/hana.git
+#   GIT_TAG v1.7.0 # or a specific commit for a stable version
+#   DOWNLOAD_ONLY YES # Since it's header-only, we only need to download it, not build it
+# )
 
 # Since Hana is header-only, we only need to add its include directory
-if(Hana_ADDED)
-  add_library(BoostHana INTERFACE IMPORTED)
-  target_include_directories(BoostHana INTERFACE ${Hana_SOURCE_DIR}/include)
-endif()
+# if(Hana_ADDED)
+#   add_library(BoostHana INTERFACE IMPORTED)
+#   target_include_directories(BoostHana INTERFACE ${Hana_SOURCE_DIR}/include)
+# endif()
 
 
 

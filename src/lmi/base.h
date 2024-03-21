@@ -1,5 +1,6 @@
 #include <concepts>
 #include "exceptions.h"
+#include "validator.h"
 #include <memory>
 #include <boost/hana.hpp>
 #include <nlohmann/json.hpp>
@@ -12,7 +13,6 @@
 #include <algorithm> // For std::transform
 #include <iostream>
 #include <iterator> // For std::back_inserter
-
 
 namespace hana = boost::hana;
 using json = nlohmann::json;
@@ -49,148 +49,80 @@ std::string> to_json(T const& x) {
   return "{" + join(std::move(json), ", ") + "}";
 }
 
-// struct BaseFunction {
-//     public:
-//         virtual ~BaseFunction();
-//         virtual validate() const = 0;
-//     protected:
-//         std::vector<BaseValidationError> errors;
-//         void validate_() {
-//             json raw_input = to_json(this);
-//         }
-// };
-
-
-
-// int main() {
-//     MyClass obj = MyClass::create(); // Factory method handles everything.
-// }
-
-
-// hana::for_each(john, [](auto pair) {
-//   std::cout << hana::to<char const*>(hana::first(pair)) << ": "
-//             << hana::second(pair) << std::endl;
-// });
-
-
-// int square(int x) {
-//     return x * x;
-// }
-
-// int main() {
-//     std::vector<int> numbers = {1, 2, 3, 4, 5};
-//     std::vector<int> squaredNumbers;
-
-//     std::transform(numbers.begin(), numbers.end(), std::back_inserter(squaredNumbers), square);
-
-//     // Printing the squared numbers
-//     for (int num : squaredNumbers) {
-//         std::cout << num << " ";
-//     }
-//     std::cout << std::endl;
-
-//     return 0;
-// }
-
 
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <variant>
 
-int main() {
-    // Define the variant to hold int, float, and string types
-    using Value = std::variant<int, float, std::string>;
-
-    // Create an unordered_map with string keys and Value as the value type
-    std::unordered_map<std::string, Value> unstructuredMap;
 // TODO:
 // ADD LT VALIDATOR TO VALIDATOR FUNCTION AND GET PERSON TO VALIDATE
+
 class Person {
     public:
         BOOST_HANA_DEFINE_STRUCT(Person,
         (std::string, name),
             (int, age),
-            (double, height)
+            (float, height)
         );
-    private:
-        // Define a type for a generic validator function.
-        // Note: This uses std::any for input, requiring runtime type checking.
-        using ValidatorFunction = std::function<std::optional<BaseValidationError>(const std::any&)>;
-        std::unordered_map<std::string, ValidatorFunction> validators;
-        std::vector<BaseValidationError> validationErrors_;
-        template<typename T>
-        std::vector<BaseValidationError> validateField(
-                    std::string& attribName,
-                    T& value,
-                    const std::vector<std::function<std::optional<BaseValidationError>(T)&>> validators
-                ) {
-
-            for (validator : validators) {
-                auto validationResult = validator.validate(dataToValidate);
-                if (validationResult) {
-                    validationErrors_.push_back(validationResult)
-                }
-            }
-
-        void validate() {
-            hana::for_each(this, [](auto pair)){
-                std::string attribName = hana::to<char const*>(hana::first(pair));
-                validateField(attribName, hana::second(pair), validators_[attribName]);
-            }
-        }
         // Constructor with direct values
-        Person(const std::string& name, int age, double height) {
+        Person(const std::string& name, int age, float height) {
             this->name=name;
             this->age=age;
             this->height=height;
 
-            // name = validateName(inputName);
-            // age = validateAge(inputAge);
-            // height = validateHeight(inputHeight);
-
-            // if we validate post init we can store validation functions in map
-            // and use string from names to pass to validator for arg.
-            //
-            // alternatively if we validate on init then we will need to manually call these functions
-            // and pass in a string for the argument name, as well as its value
+            validators_["age"].push_back(std::make_unique<LTIntValidator>(100, "age"));
+            validators_["age"].push_back(std::make_unique<GTIntValidator>(1, "age"));
+            validators_["height"].push_back(std::make_unique<LTFloatValidator>(3.0, "height"));
+            validators_["height"].push_back(std::make_unique<GTFloatValidator>(1.0, "height"));
         }
 
-
-    // Constructor from nlohmann::json object
-    // Person(const nlohmann::json& json) {
-    //     name = validateName(json.at("name").get<std::string>());
-    //     age = validateAge(json.at("age").get<int>());
-    //     height = validateHeight(json.at("height").get<double>());
-    // }
-
-    static Person create(const std::string& name, int age, double height) {
-        Person obj(const std::string& name, int age, double height);
-        obj.validate();
-        if (!obj.errors.empty()) {
-            throw ModelValidatrionErrors(obj.errors);
+        void validate() {
+            auto keys = hana::keys(*this);
+            hana::for_each(keys, [this](const auto& key) {
+                auto& member = hana::at_key(*this, key);
+                std::string attribName = hana::to<char const*>(key);
+                validateField(attribName, member);
+            });
         }
-    }
-private:
-    // Validation functions
-    static std::string validateName(const std::string& val) {
-        if (val.empty())
-            throw std::invalid_argument("Name cannot be empty");
-        return val;
-    }
 
-    static int validateAge(int val) {
-        if (val < 0 || val > 150)
-            throw std::invalid_argument("Age must be between 0 and 150");
-        return val;
-    }
+        // json getValidSchema() {
+        //     auto keys = hana::keys(*this);
 
-    static double validateHeight(double val) {
-        if (val < 0.0 || val > 3.0)
-            throw std::invalid_argument("Height must be between 0.0 and 3.0 meters");
-        return val;
-    }
+        //     hana::for_each(keys, [this](const auto& key) {
+        //         auto& member = hana::at_key(*this, key);
+        //         std::string attribName = hana::to<char const*>(key);
+        //     }
+
+        //     json validSchema;
+
+        // }
+
+
+        static Person create(const std::string& name, int age, double height) {
+            Person obj(name, age, height); // Corrected object instantiation
+            obj.validate(); // Uncomment after implementing validate correctly
+            if (!obj.validationErrors_.empty()) {
+                throw ModelValidatrionErrors(obj.validationErrors_);
+            }
+            return obj;
+        }
+    private:
+        // Define a type for a generic validator function.
+        // Note: This uses std::any for input, requiring runtime type checking.
+        std::unordered_map<std::string, std::vector<std::unique_ptr<IBaseFieldValidator>>> validators_;
+        std::vector<BaseValidationError> validationErrors_;
+
+        template<typename T>
+        void validateField(const std::string& attribName, const T& value) {
+            auto it = validators_.find(attribName);
+            if (it == validators_.end()) return;
+
+            for (const auto& validator : it->second) {
+                auto validationResult = validator->validate(value);
+                if (validationResult) {
+                    validationErrors_.push_back(*validationResult);
+                }
+            }
+        }
 };
-
-
-// BOOST_HANA_ADAPT_STRUCT(Person, name, age, height);
