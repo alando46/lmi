@@ -28,7 +28,7 @@ option(ENABLE_LTO "Enable to add Link Time Optimization." ON)
 
 # Project/Library Names
 set(LIBRARY_NAME "lmi")
-set(UNIT_TEST_NAME "unit_tests")
+set(UNIT_TEST_NAME "lmi_unit_tests")
 # set(EXECUTABLE_NAME "main")
 
 # CMAKE MODULES
@@ -77,7 +77,7 @@ cpmaddpackage("gh:gabime/spdlog@1.13.0")
 add_subdirectory(configured)
 add_subdirectory(lmi)
 add_subdirectory(include)
-
+add_subdirectory(tests)
 # INSTALL TARGETS
 
 # install(

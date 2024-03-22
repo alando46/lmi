@@ -26,7 +26,7 @@ namespace lmi {
         class Message {
         public:
             std::string role;
-            json content;
+            jsoncons::json content;
             std::vector<ToolCall> tool_calls;
         };
 
@@ -34,7 +34,7 @@ namespace lmi {
         public:
             int index;
             Message message;
-            json logprobs;
+            jsoncons::json logprobs;
             std::string finish_reason;
         };
 
@@ -51,6 +51,7 @@ namespace lmi {
             std::string object;
             int64_t created;
             std::string model;
+            std::string system_fingerprint;
             std::vector<Choice> choices;
             Usage usage;
         };
@@ -59,7 +60,7 @@ namespace lmi {
 
 } // namespace lmi
 
-JSONCONS_ALL_MEMBER_TRAITS(lmi::openAI::ChatCompletion, id, object, created, model, choices, usage)
+JSONCONS_ALL_MEMBER_TRAITS(lmi::openAI::ChatCompletion, id, object, created, model, choices, usage, system_fingerprint)
 JSONCONS_ALL_MEMBER_TRAITS(lmi::openAI::Choice, index, message, logprobs, finish_reason)
 JSONCONS_ALL_MEMBER_TRAITS(lmi::openAI::Message, role, content, tool_calls)
 JSONCONS_ALL_MEMBER_TRAITS(lmi::openAI::ToolCall, id, type, function)

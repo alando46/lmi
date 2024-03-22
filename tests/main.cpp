@@ -2,28 +2,30 @@
 #include <catch2/catch_test_macros.hpp>
 #include <jsoncons/json.hpp>
 #include <string>
+#include <fstream>
 
 #include "lmi/lmi.h"
 
-TEST_CASE("JSON->C++->JSON NO VALIDATION")
+TEST_CASE("JSON->C++->JSON NO VALIDATION") {
+    std::ifstream inputFile("/mnt/c/Users/music/code/LMI/tests/data/openAIResponse.json");
+    REQUIRE(inputFile.is_open());
 
-    std::ifstream inputFile("data/openAIResponse.json");
-    if (!inputFile.is_open()) {
-        std::cerr << "Failed to open input file" << std::endl;
-        return 1;
+    jsoncons::json sourceJson;
+    try {
+        sourceJson = jsoncons::json::parse(inputFile);
+    } catch (const std::exception& e) {
+        FAIL("Error parsing JSON: " << e.what());
     }
 
-    jsoncons::json testJson;
-    try {
-        testJson = json::parse(inputFile);
-    } catch (const std::exception& e) {
-        std::cerr << "Error parsing JSON: " << e.what() << std::endl;
+    // Convert JSON to ChatCompletion object
+    lmi::openAI::ChatCompletion cc = sourceJson.as<lmi::openAI::ChatCompletion>();
 
-    // convert json to ChatCompletion object
-    lmi::openAI::ChatCompletion cc = testJson.as<lmi::openAI::ChatCompletion>();
-    // convert back to json and render as string
-    std::string jsonString = jsoncons::encode_json(cc);
-    REQUIRE(jsonString == testJson.to_string())
+    // Convert back to JSON and render as string
+    std::string testResultsJsonStr;
+    jsoncons::encode_json(cc, testResultsJsonStr);
+
+    REQUIRE(testResultsJsonStr == sourceJson.as_string());
+}
 
 
 // class User : public JsonSchemaValidator {
