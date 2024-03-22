@@ -1,32 +1,29 @@
 // #define CATCH_CONFIG_MAIN
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <jsoncons/json.hpp>
 #include <string>
-#include <concepts>
-#include "validator.h"
-#include "exceptions.h"
-#include "base.h"
 
+#include "lmi/lmi.h"
 
-// TEST_CASE("Reflective Class MVP" ) {
+TEST_CASE("JSON->C++->JSON NO VALIDATION")
 
-//     SECTION("basic validation passes") {
-//         Person bill{"bill", 15, 2.5};
+    std::ifstream inputFile("data/openAIResponse.json");
+    if (!inputFile.is_open()) {
+        std::cerr << "Failed to open input file" << std::endl;
+        return 1;
+    }
 
-//         json test_out = bill.to_json();
+    jsoncons::json testJson;
+    try {
+        testJson = json::parse(inputFile);
+    } catch (const std::exception& e) {
+        std::cerr << "Error parsing JSON: " << e.what() << std::endl;
 
-//         std::cout << test_out;
-
-
-//         // nlohmann::json j = R"({"name": "John Doe", "email": "john.doe@example.com"})"_json;
-//         // User user(j);
-//         // REQUIRE(user.isValid());
-//     }
-
-// }
-
-
-
-
+    // convert json to ChatCompletion object
+    lmi::openAI::ChatCompletion cc = testJson.as<lmi::openAI::ChatCompletion>();
+    // convert back to json and render as string
+    std::string jsonString = jsoncons::encode_json(cc);
+    REQUIRE(jsonString == testJson.to_string())
 
 
 // class User : public JsonSchemaValidator {

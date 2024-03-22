@@ -1,5 +1,5 @@
 if(ENABLE_TESTING)
-    set(TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cc")
+    set(TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
     set(TEST_HEADERS "")
 
     add_executable(${UNIT_TEST_NAME} ${TEST_SOURCES} ${TEST_HEADERS})
@@ -18,10 +18,9 @@ if(ENABLE_TESTING)
     if(ENABLE_COVERAGE)
         set(COVERAGE_MAIN "coverage")
         set(COVERAGE_EXCLUDES
-            "${PROJECT_SOURCE_DIR}/app/*"
+            "${PROJECT_SOURCE_DIR}/lmi/*"
             "${PROJECT_SOURCE_DIR}/cmake/*"
             "${PROJECT_SOURCE_DIR}/docs/*"
-            "${PROJECT_SOURCE_DIR}/external/*"
             "${PROJECT_SOURCE_DIR}/tests/*"
             "${PROJECT_SOURCE_DIR}/build/*"
             "/usr/include/*")
