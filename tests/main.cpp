@@ -6,8 +6,8 @@
 
 #include "lmi/lmi.h"
 
-TEST_CASE("JSON->C++->JSON NO VALIDATION") {
-    std::ifstream inputFile("/mnt/c/Users/music/code/LMI/tests/data/openAIResponse.json");
+TEST_CASE("OAI RESPONSE JSON->C++->JSON NO VALIDATION") {
+    std::ifstream inputFile("tests/data/openAIResponse.json");
     REQUIRE(inputFile.is_open());
 
     jsoncons::json sourceJson;
@@ -18,7 +18,7 @@ TEST_CASE("JSON->C++->JSON NO VALIDATION") {
     }
 
     // Convert JSON to ChatCompletion object
-    lmi::openAI::ChatCompletion cc = sourceJson.as<lmi::openAI::ChatCompletion>();
+    lmi::openAI::ChatCompletionModel cc = sourceJson.as<lmi::openAI::ChatCompletionModel>();
 
     // Convert back to JSON and render as string
     std::string testResultsJsonStr;
@@ -26,6 +26,16 @@ TEST_CASE("JSON->C++->JSON NO VALIDATION") {
 
     REQUIRE(testResultsJsonStr == sourceJson.as_string());
 }
+
+
+// how to have a single class define both members and types (what we already have) and generate schema?
+// for a given class, define a schema file method
+// 1. with a macro we read that schema file at compile time and assert that it is valid schema for the
+// class for which it is assigned
+// or 2. we don't verify 1, and just have the base class define the schema validation workflow per
+// the workflow described https://github.com/danielaparker/jsoncons/blob/master/doc/ref/jsonschema/jsonschema.md#default-values-1
+// ideally this is part of base class so validation can be done while decoding from json to c++ object.
+
 
 
 // class User : public JsonSchemaValidator {
