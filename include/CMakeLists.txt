@@ -17,6 +17,7 @@ target_sources(${LIBRARY_NAME} PRIVATE
 target_link_libraries(${LIBRARY_NAME}
     PRIVATE
     jsoncons
+    cpr::cpr
 )
 
 if(${ENABLE_WARNINGS})
