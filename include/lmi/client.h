@@ -16,7 +16,7 @@ namespace lmi {
         std::string& endPoint_;
         std::string& apiKey_;
         public:
-            BackendBase(std::string& endPoint, std::string& apiKey) : endPoint_(endPoint) apiKey_(apiKey) {}
+            BackendBase(std::string& endPoint, std::string& apiKey) : endPoint_(endPoint), apiKey_(apiKey) {}
 
             std::unique_ptr<lmi::LMIFunction> create(std::string model, LMIMessage messages, const std::vector<std::unique_ptr<LMIFunction>>& responseModel, int retries=3);
 

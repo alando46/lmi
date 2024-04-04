@@ -75,16 +75,16 @@ cpmaddpackage("gh:gabime/spdlog@1.13.0")
 # SUB DIRECTORIES
 
 add_subdirectory(configured)
-add_subdirectory(lmi)
+# add_subdirectory(lmi)
 add_subdirectory(include)
 add_subdirectory(tests)
 # INSTALL TARGETS
 
-# install(
-#     TARGETS ${EXECUTABLE_NAME}
-#     ARCHIVE DESTINATION lib
-#     LIBRARY DESTINATION lib
-#     RUNTIME DESTINATION bin)
+install(
+    TARGETS ${EXECUTABLE_NAME}
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin)
 
 install(
     TARGETS ${LIBRARY_NAME}
