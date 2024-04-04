@@ -46,7 +46,7 @@ namespace lmi {
     class LMIFunction {
     protected:
         // schema in json form
-        jsoncons::json jsonSchema_;
+        static jsoncons::json jsonSchema_;
         jsoncons::json rawJson_;
         virtual void setValues() = 0;
 
@@ -56,28 +56,30 @@ namespace lmi {
                 rawJson_(rawJson) {
         }
         virtual ~LMIFunction() = default;
-
-        void validateAndSet() {
-            // need to load json schema into a json_schema object
-            // Throws schema_error if JSON Schema loading fails
-            auto sch = jsonschema::make_schema(jsonSchema_);
-            // build error reporter lambda
-            std::size_t error_count = 0;
-            auto reporter = [&error_count](const jsonschema::validation_output& o)
-            {
-                ++error_count;
-                std::cout << o.instance_location() << ": " << o.message() << "\n";
-            };
-            // initialize validator
-            jsonschema::json_validator<json> validator(sch);
-            // validate model for conformance with schema
-            validator.validate(rawJson_, reporter);
-            // TODO: add spdlog
-            std::cout << "\nError count: " << error_count << "\n\n";
-            // validation passed, set the values on this object
-            setValues();
-        }
     };
+
+
+    void validate(jsoncons::json schema, jsoncons::json rawJson) {
+        std::string output;
+        jsoncons::encode_json(schema, output, jsoncons::indenting::indent);
+        std::cout << output << std::endl;
+        // need to load json schema into a json_schema object
+        // Throws schema_error if JSON Schema loading fails
+        auto sch = jsonschema::make_schema(schema);
+        // build error reporter lambda
+        std::size_t error_count = 0;
+        auto reporter = [&error_count](const jsonschema::validation_output& o)
+        {
+            ++error_count;
+            std::cout << o.instance_location() << ": " << o.message() << "\n";
+        };
+        // initialize validator
+        jsonschema::json_validator<json> validator(sch);
+        // validate model for conformance with schema
+        validator.validate(rawJson, reporter);
+        // TODO: add spdlog
+        std::cout << "\nError count: " << error_count << "\n\n";
+    }
 
 } // namespace lmi
 

@@ -2,7 +2,7 @@ set(APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
 
 add_executable(${EXECUTABLE_NAME} ${APP_SOURCES})
 
-target_include_directories(${EXECUTABLE_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(${EXECUTABLE_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/tests)
 
 target_link_libraries(
     ${EXECUTABLE_NAME}
