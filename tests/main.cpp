@@ -1,5 +1,6 @@
 // #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_predicate.hpp>
 #include <jsoncons/json.hpp>
 #include <jsoncons_ext/jsonschema/jsonschema.hpp>
 
@@ -161,5 +162,6 @@ TEST_CASE("Instantiating LMIFunction subclass and validation workflow works for 
             return whatToSay_;
         }
     };
+    // using namespace Catch::Matchers
     REQUIRE_THROWS_WITH(SaySomething(data), "Key not found: 'whatToSay'");
 }
