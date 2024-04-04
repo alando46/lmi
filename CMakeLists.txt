@@ -29,7 +29,7 @@ option(ENABLE_LTO "Enable to add Link Time Optimization." ON)
 # Project/Library Names
 set(LIBRARY_NAME "lmi")
 set(UNIT_TEST_NAME "lmi_unit_tests")
-# set(EXECUTABLE_NAME "main")
+set(EXECUTABLE_NAME "main")
 
 # CMAKE MODULES
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
@@ -64,10 +64,21 @@ FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
                          GIT_TAG 3b15fa82ea74739b574d705fea44959b58142eb8)
 FetchContent_MakeAvailable(cpr)
 
+Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.5.3
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+
 message(STATUS "Using CPM")
 include(CPM)
 cpmaddpackage("gh:fmtlib/fmt#10.2.1")
-cpmaddpackage("gh:catchorg/Catch2@3.5.3")
+# cpmaddpackage("gh:catchorg/Catch2@3.5.3")
 cpmaddpackage("gh:danielaparker/jsoncons@0.173.4")
 cpmaddpackage("gh:gabime/spdlog@1.13.0")
 
@@ -75,7 +86,7 @@ cpmaddpackage("gh:gabime/spdlog@1.13.0")
 # SUB DIRECTORIES
 
 add_subdirectory(configured)
-# add_subdirectory(lmi)
+add_subdirectory(lmi)
 add_subdirectory(include)
 add_subdirectory(tests)
 # INSTALL TARGETS

@@ -79,9 +79,6 @@ namespace lmi {
         }
     };
 
-
-
-
 } // namespace lmi
 
 #endif
