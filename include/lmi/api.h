@@ -16,7 +16,7 @@ namespace jsonschema = jsoncons::jsonschema;
 
 namespace lmi {
 
-    jsoncons::json loadSchema(std::string& schemaPath) {
+    inline jsoncons::json loadSchema(std::string& schemaPath) {
         std::ifstream file(schemaPath);
         if (!file.is_open()) {
             throw std::runtime_error("Failed to open schema file: " + schemaPath);
@@ -44,22 +44,17 @@ namespace lmi {
      * - (optionally) return a json string of the validated data
      */
     class LMIFunction {
-    protected:
+    // protected:
         // schema in json form
-        static jsoncons::json jsonSchema_;
-        jsoncons::json rawJson_;
-        virtual void setValues() = 0;
+        // static jsoncons::json jsonSchema_;
+        // jsoncons::json rawJson_;
+        // virtual void setValues() = 0;
 
     public:
-        LMIFunction(
-            jsoncons::json rawJson) :
-                rawJson_(rawJson) {
-        }
         virtual ~LMIFunction() = default;
     };
 
-
-    void validate(jsoncons::json schema, jsoncons::json rawJson) {
+    inline void validate(jsoncons::json schema, jsoncons::json rawJson) {
         std::string output;
         jsoncons::encode_json(schema, output, jsoncons::indenting::indent);
         std::cout << output << std::endl;

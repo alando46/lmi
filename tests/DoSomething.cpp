@@ -1,6 +1,6 @@
 #include "DoSomething.h"
 
-jsoncons::json DoSomething::jsonSchema_ = json::parse(R"(
+jsoncons::json Action::jsonSchema_ = json::parse(R"(
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "TestWhatToSaySchema",
@@ -20,3 +20,4 @@ jsoncons::json DoSomething::jsonSchema_ = json::parse(R"(
     "required": [ "whatToSay", "facialExpression" ]
 }
 )");
+

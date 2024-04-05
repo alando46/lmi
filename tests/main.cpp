@@ -11,6 +11,7 @@
 #include <variant>
 #include <iostream>
 #include "lmi/lmi.h"
+#include "DoSomething.h"
 
 // namespace testNS {
 
@@ -226,3 +227,15 @@
 
 //     REQUIRE_THROWS_WITH(SaySomething(data), Catch::Matchers::ContainsSubstring("Key not found: 'whatToSay'"));
 // }
+
+
+TEST_CASE("Instantiating LMIFunction subclass and validation workflow works for invalid data - multiple fields") {
+    json data = json::parse(R"(
+{
+  "whatToSay": "Hi I'm Bob!",
+  "facialExpression": "grinning"
+}
+   )");
+
+    Action action = Action::create(data);
+}

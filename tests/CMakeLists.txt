@@ -1,5 +1,5 @@
 if(ENABLE_TESTING)
-    set(TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
+    set(TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/DoSomething.cpp")
     set(TEST_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/DoSomething.h")
 
     add_executable(${UNIT_TEST_NAME} ${TEST_SOURCES} ${TEST_HEADERS})
