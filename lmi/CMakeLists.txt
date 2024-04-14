@@ -1,16 +1,16 @@
-set(APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cc")
+set(APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/action.cpp")
+set(APP_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/action.h")
 
-add_executable(${EXECUTABLE_NAME} ${APP_SOURCES})
+add_executable(${EXECUTABLE_NAME} ${APP_SOURCES} ${APP_HEADERS})
+
+target_include_directories(${EXECUTABLE_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 target_link_libraries(
     ${EXECUTABLE_NAME}
     PRIVATE ${LIBRARY_NAME}
-            nlohmann_json::nlohmann_json
-            fmt::fmt
-            spdlog::spdlog
-            cpr::cpr
-            )
-            # cxxopts::cxxopts)
+    jsoncons
+    cpr::cpr
+    )
 
 if(${ENABLE_WARNINGS})
     target_set_warnings(

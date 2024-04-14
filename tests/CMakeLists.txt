@@ -1,11 +1,13 @@
 if(ENABLE_TESTING)
-    set(TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cc")
-    set(TEST_HEADERS "")
+    set(TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/DoSomething.cpp")
+    set(TEST_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/DoSomething.h")
 
     add_executable(${UNIT_TEST_NAME} ${TEST_SOURCES} ${TEST_HEADERS})
 
     target_link_libraries(${UNIT_TEST_NAME} PUBLIC ${LIBRARY_NAME})
-    target_link_libraries(${UNIT_TEST_NAME} PRIVATE Catch2::Catch2WithMain)
+    target_link_libraries(${UNIT_TEST_NAME} PRIVATE jsoncons Catch2::Catch2WithMain)
+
+    target_include_directories(${UNIT_TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
     target_set_warnings(
         TARGET
@@ -18,10 +20,9 @@ if(ENABLE_TESTING)
     if(ENABLE_COVERAGE)
         set(COVERAGE_MAIN "coverage")
         set(COVERAGE_EXCLUDES
-            "${PROJECT_SOURCE_DIR}/app/*"
+            "${PROJECT_SOURCE_DIR}/lmi/*"
             "${PROJECT_SOURCE_DIR}/cmake/*"
             "${PROJECT_SOURCE_DIR}/docs/*"
-            "${PROJECT_SOURCE_DIR}/external/*"
             "${PROJECT_SOURCE_DIR}/tests/*"
             "${PROJECT_SOURCE_DIR}/build/*"
             "/usr/include/*")

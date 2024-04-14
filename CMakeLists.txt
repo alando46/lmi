@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(
-    "LMI"
+    "lmi"
     VERSION 0.1.0
     LANGUAGES CXX)
 
@@ -13,28 +13,22 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Options
 option(USE_CPM "Whether to use CPM." ON)
-
 option(ENABLE_WARNINGS "Enable to add warnings to a target." OFF)
 option(ENABLE_WARNINGS_AS_ERRORS "Enable to treat warnings as errors." OFF)
-
 option(ENABLE_TESTING "Enable a Unit Testing build." ON)
 option(ENABLE_COVERAGE "Enable a Code Coverage build." OFF)
-
 option(ENABLE_CLANG_TIDY "Enable to add clang tidy." OFF)
-
 option(ENABLE_SANITIZE_ADDR "Enable address sanitize." OFF)
 option(ENABLE_SANITIZE_UNDEF "Enable undefined sanitize." OFF)
 option(ENABLE_SANITIZE_LEAK "Enable leak sanitize (Gcc/Clang only)." OFF)
 option(ENABLE_SANITIZE_THREAD "Enable thread sanitize (Gcc/Clang only)." OFF)
-
 option(ENABLE_CLANG_FORMAT "Enable to add clang-format." ON)
 option(ENABLE_CMAKE_FORMAT "Enable to add cmake-format." ON)
-
 option(ENABLE_LTO "Enable to add Link Time Optimization." ON)
 
 # Project/Library Names
-set(LIBRARY_NAME "LMI")
-set(UNIT_TEST_NAME "unit_tests")
+set(LIBRARY_NAME "lmi")
+set(UNIT_TEST_NAME "lmi_unit_tests")
 set(EXECUTABLE_NAME "main")
 
 # CMAKE MODULES
@@ -65,47 +59,36 @@ if(ENABLE_LTO)
 endif()
 
 # EXTERNAL LIBRARIES
-
 include(FetchContent)
 FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
                          GIT_TAG 3b15fa82ea74739b574d705fea44959b58142eb8)
 FetchContent_MakeAvailable(cpr)
 
+Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.5.3
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+
 message(STATUS "Using CPM")
 include(CPM)
 cpmaddpackage("gh:fmtlib/fmt#10.2.1")
-# cpmaddpackage("gh:nlohmann/json@3.11.3")
-cpmaddpackage("gh:catchorg/Catch2@3.5.3")
+# cpmaddpackage("gh:catchorg/Catch2@3.5.3")
 cpmaddpackage("gh:danielaparker/jsoncons@0.173.4")
-
-# cpmaddpackage("gh:pboettch/json-schema-validator#2.3.0")
-# cxx opts is a cli utility
-# cpmaddpackage("gh:jarro2783/cxxopts@3.1.1")
 cpmaddpackage("gh:gabime/spdlog@1.13.0")
-# cpmaddpackage("gh:boostorg/hana@1.7.0")
-
-# CPMAddPackage(
-#   NAME Hana
-#   GIT_REPOSITORY https://github.com/boostorg/hana.git
-#   GIT_TAG v1.7.0 # or a specific commit for a stable version
-#   DOWNLOAD_ONLY YES # Since it's header-only, we only need to download it, not build it
-# )
-
-# Since Hana is header-only, we only need to add its include directory
-# if(Hana_ADDED)
-#   add_library(BoostHana INTERFACE IMPORTED)
-#   target_include_directories(BoostHana INTERFACE ${Hana_SOURCE_DIR}/include)
-# endif()
-
 
 
 # SUB DIRECTORIES
 
 add_subdirectory(configured)
-add_subdirectory(src)
-add_subdirectory(app)
+add_subdirectory(lmi)
+add_subdirectory(include)
 add_subdirectory(tests)
-
 # INSTALL TARGETS
 
 install(
