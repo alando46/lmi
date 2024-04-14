@@ -10,6 +10,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <type_traits>
+#include <validationError.h>
 
 using jsoncons::json;
 namespace jsonschema = jsoncons::jsonschema;
@@ -62,18 +63,29 @@ namespace lmi {
         // Throws schema_error if JSON Schema loading fails
         auto sch = jsonschema::make_schema(schema);
         // build error reporter lambda
-        std::size_t error_count = 0;
-        auto reporter = [&error_count](const jsonschema::validation_output& o)
+        // TODO: throw actual errors
+        std::size_t errorCount = 0;
+        std::string errorMessage = "";
+        auto reporter = [&errorCount, &errorMessage](const jsonschema::validation_output& o)
         {
-            ++error_count;
-            std::cout << o.instance_location() << ": " << o.message() << "\n";
+            ++errorCount;
+            errorMessage += "\n";
+            // std::cout << o.instance_location() << ": " << o.message() << "\n";
+            errorMessage += o.instance_location();
+            errorMessage += ": ";
+            errorMessage += o.message();
         };
         // initialize validator
         jsonschema::json_validator<json> validator(sch);
         // validate model for conformance with schema
+        // validator.validate(rawJson);
         validator.validate(rawJson, reporter);
+        if (errorCount > 0) {
+            throw ValidationException(errorMessage);
+        }
+
         // TODO: add spdlog
-        std::cout << "\nError count: " << error_count << "\n\n";
+        // std::cout << "\nError count: " << error_count << "\n\n";
     }
 
 } // namespace lmi

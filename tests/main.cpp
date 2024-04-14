@@ -237,5 +237,6 @@ TEST_CASE("Instantiating LMIFunction subclass and validation workflow works for 
 }
    )");
 
-    Action action = Action::create(data);
+    REQUIRE_THROWS_WITH(Action::create(data), Catch::Matchers::ContainsSubstring("grinning is not a valid enum value"));
+    REQUIRE_THROWS_WITH(Action::create(data), Catch::Matchers::ContainsSubstring("Expected maxLength: 5, actual: 11"));
 }

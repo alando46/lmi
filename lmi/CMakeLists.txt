@@ -1,6 +1,7 @@
-set(APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
+set(APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/action.cpp")
+set(APP_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/action.h")
 
-add_executable(${EXECUTABLE_NAME} ${APP_SOURCES})
+add_executable(${EXECUTABLE_NAME} ${APP_SOURCES} ${APP_HEADERS})
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
