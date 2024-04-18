@@ -6,6 +6,7 @@
 #include <string>
 #include <jsoncons/json.hpp>
 #include <jsoncons_ext/jsonschema/jsonschema.hpp>
+#include <cpr/cpr.h>
 #include <vector>
 #include <fstream>
 #include <stdexcept>

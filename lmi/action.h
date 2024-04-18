@@ -35,6 +35,10 @@ class Action : public lmi::LMIFunction {
             return Action(rawJson);
         };
 
+        jsoncons::json getSchema() override {
+            return jsonSchema_;
+        }
+
         std::string getWhatToSay() {
             return whatToSay_;
         }
