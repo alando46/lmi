@@ -6,7 +6,7 @@ a mix of functionalities similar to Python's [Pydantic](https://github.com/pydan
 
 ## Example workflow
 
-The following tutorial covers the basic tutorial to create a `LMIFunction` subclass, and include
+The following tutorial covers the basics of how to create a `LMIFunction` subclass, and include
 it as a response model in a chat completion request. 
 
 1. Create desired child class. In this case, we will crfeate a class that moves a NPC to a new location 
@@ -103,15 +103,25 @@ Destination validStrToDest(const std::string& rawStr) {
 
 class MoveTo: public lmi::Function {
 private:
+    jsoncons::json rawJson_;
+    static jsoncons:: jsonSchema_;
+
     // data attribs
     MovementStyle movementStyle_;
     Destination destination_;
 
 protected:
-
+    // required, must define this method and set data attribs from
+    // raw json
     void setValues() {
         movementStyle_ = validStrToMovStyle(rawJson_["movementStyle"].as<std::string>());
         destination_ = validStrToDest(rawJson_["destination"].as<std::string>());
+    }
+
+public:
+    // required, must return schema
+    jsoncons::json getSchema() {
+        return jsonSchema_;
     }
 }
 ```
@@ -158,7 +168,7 @@ jsoncons::json Action::jsonSchema_ = json::parse(R"(
 )");
 ```
 
-## TODO: show how how to call makeOAIRequest with the `MoveTo` class created above, and get an instantiated instance of `MoveTo` as output.
+TODO: show how how to call makeOAIRequest with the `MoveTo` class created above, and get an instantiated instance of `MoveTo` as output.
 
 
 
