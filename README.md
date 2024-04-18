@@ -1,71 +1,160 @@
-# Template For C++ Projects
+# Language Model Interface
 
-![C++](https://img.shields.io/badge/C%2B%2B-11%2F14%2F17%2F20%2F23-blue)
-![License](https://camo.githubusercontent.com/890acbdcb87868b382af9a4b1fac507b9659d9bf/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d626c75652e737667)
-![Linux Build](https://github.com/franneck94/CppProjectTemplate/workflows/Ubuntu%20CI%20Test/badge.svg)
-[![codecov](https://codecov.io/gh/franneck94/CppProjectTemplate/branch/master/graph/badge.svg)](https://codecov.io/gh/franneck94/CppProjectTemplate)
+LMI is an interface library for runtime validation and casting of JSON function calls to C++ objects.
+The library uses [jsoncons](https://github.com/danielaparker/jsoncons) for the heavy lifting, and aims to provide
+a mix of functionalities similar to Python's [Pydantic](https://github.com/pydantic/pydantic) and [Instructor](https://github.com/jxnl/instructor) libraries.
 
-This is a template for C++ projects. What you get:
+## Example workflow
 
-- Library, executable and test code separated in distinct folders
-- Use of modern CMake for building and compiling
-- External libraries installed and managed by
-  - [CPM](https://github.com/cpm-cmake/CPM.cmake) Package Manager OR
-  - [Conan](https://conan.io/) Package Manager OR
-  - [VCPKG](https://github.com/microsoft/vcpkg) Package Manager
-- Unit testing using [Catch2](https://github.com/catchorg/Catch2) v2
-- General purpose libraries: [JSON](https://github.com/nlohmann/json), [spdlog](https://github.com/gabime/spdlog), [cxxopts](https://github.com/jarro2783/cxxopts) and [fmt](https://github.com/fmtlib/fmt)
-- Continuous integration testing with Github Actions and [pre-commit](https://pre-commit.com/)
-- Code coverage reports, including automatic upload to [Codecov](https://codecov.io)
-- Code documentation with [Doxygen](https://doxygen.nl/) and [Github Pages](https://franneck94.github.io/CppProjectTemplate/)
-- Tooling: Clang-Format, Cmake-Format, Clang-tidy, Sanitizers
+The following tutorial covers the basic tutorial to create a `LMIFunction` subclass, and include
+it as a response model in a chat completion request. 
 
-## Structure
+1. Create desired child class.
 
-``` text
-├── CMakeLists.txt
-├── app
-│   ├── CMakesLists.txt
-│   └── main.cc
-├── cmake
-│   └── cmake modules
-├── docs
-│   ├── Doxyfile
-│   └── html/
-├── external
-│   ├── CMakesLists.txt
-│   ├── ...
-├── src
-│   ├── CMakesLists.txt
-│   ├── my_lib.h
-│   └── my_lib.cc
-└── tests
-    ├── CMakeLists.txt
-    └── main.cc
+```C++
+class MoveTo : public lmi::LMIFunction {
+
+
+}
 ```
 
-Library code goes into [src/](src/), main program code in [app/](app) and tests go in [tests/](tests/).
+2. Add required private attributes `rawJson_` and `jsonSchema_`.
 
-## Software Requirements
+```C++
+#include <jsoncons/json.hpp>
+#include <jsoncons_ext/jsonschema/jsonschema.hpp>
+#include <string>
+#include "lmi/lmi.h"
 
-- CMake 3.21+
-- GNU Makefile
-- Doxygen
-- Conan or VCPKG
-- MSVC 2017 (or higher), G++9 (or higher), Clang++9 (or higher)
-- Optional: Code Coverage (only on GNU|Clang): lcov, gcovr
-- Optional: Makefile, Doxygen, Conan, VCPKG
-
-## Building
-
-First, clone this repo and do the preliminary work:
-
-```shell
-git clone --recursive https://github.com/franneck94/CppProjectTemplate
-make prepare
+class MoveTo : public lmi::LMIFunction {
+private:
+    // rawJson_ is required
+    jsoncons::json rawJson_;
+    // jsonSchema_ is required
+    // (static is required so can be used by constructor)
+    static jsoncons:: jsonSchema_;
+}
 ```
 
-- App Executable
+3. Define data attributes and any conversion necessary for setting them. Setting and conversion happens in
+`setValues()`
+
+```C++
+#include <jsoncons/json.hpp>
+#include <jsoncons_ext/jsonschema/jsonschema.hpp>
+#include <string>
+#include "lmi/lmi.h"
+
+enum class MovementStyle {
+    WalkCalm,
+    WalkFast,
+    Jog,
+    FranticSprint,
+    Default
+}
+
+enum class Destination {
+    GroceryStore1,
+    BillHome,
+    BillWork,
+    SueHome,
+    CurrentLocation,
+}
+
+MovementStyle validStrToMovStyle(const std::string& rawStr) {
+    if (rawStr == "WalkCalm") {
+        return MovementStyle::WalkCalm;
+    }
+    else if (rawStr == "WalkFast") {
+        return MovementStyle::WalkFast;
+    }
+    else if (rawStr == "Jog") {
+        return MovementStyle::Jog;
+    }
+    else if (rawStr == "FranticSprint") {
+        return MovementStyle::FranticSprint;
+    }
+    else {
+        return MovementStyle::Default;
+    }
+}
+
+Destination validStrToDest(const std::string& rawStr) {
+    if (rawStr == "GroceryStore1") {
+        return Desination::GroceryStore1;
+    }
+    else if (rawStr == "BillHome") {
+        return Destination::BillHome;
+    }
+    else if (rawStr == "BillWork") {
+        return Destination::BillWork;
+    }
+    else if (rawStr == "SueHome") {
+        return Detination::SueHome;
+    }
+    else {
+        return Destination::CurrentLocation;
+    }
+}
+
+class MoveTo: public lmi::Function {
+private:
+    // data attribs
+    MovementStyle movementStyle_;
+    Destination destination_;
+
+protected:
+
+    void setValues() {
+        movementStyle_ = validStrToMovStyle(rawJson_["movementStyle"].as<std::string>());
+        destination_ = validStrToDest(rawJson_["destination"].as<std::string>());
+    }
+}
+```
+
+4. Call `setValues()` in constructor.
+
+```C++
+class MoveTo : public lmi::LMIFunction {
+private:
+    jsoncons::json rawJson_;
+    static jsoncons:: jsonSchema_;
+public:
+    Action(jsoncons::json rawJson) : rawJson_(rawJson){
+        // required, must call here
+        setValues();
+    }
+}
+```
+
+5. In the implementation file, `moveTo.cpp`, define a jsoncons json which holds schema for validation.
+6. 
+```C++
+#include "moveTo.h"
+
+jsoncons::json Action::jsonSchema_ = json::parse(R"(
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "MoveToSchema",
+    "description": "A basic schema for the moveTo function",
+    "type": "object",
+    "properties": {
+        "destination": {
+            "description": "The destination the character should move to",
+            "enum": [ "GroceryStore1", "BillHome", "BillWork", "SueHome", "CurrentLocation" ]
+            "maxLength": 5
+        },
+        "moveStyle": {
+            "description": "The style of movement the character should adhere to while moving",
+            "enum": [ "WalkCalm", "WalkFast", "Jog", "FranticSprint", "Default" ]
+        }
+    },
+    "required": [ "destination", "moveStyle" ]
+}
+)");
+```
+
+
 
 ```shell
 cd build

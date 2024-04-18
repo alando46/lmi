@@ -6,6 +6,7 @@
 #include <string>
 #include <jsoncons/json.hpp>
 #include <jsoncons_ext/jsonschema/jsonschema.hpp>
+#include <cpr/cpr.h>
 #include <vector>
 #include <fstream>
 #include <stdexcept>
@@ -53,6 +54,8 @@ namespace lmi {
 
     public:
         virtual ~LMIFunction() = default;
+
+        virtual jsoncons::json getSchema() = 0;
     };
 
     inline void validate(jsoncons::json schema, jsoncons::json rawJson) {
