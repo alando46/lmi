@@ -9,12 +9,16 @@ a mix of functionalities similar to Python's [Pydantic](https://github.com/pydan
 The following tutorial covers the basic tutorial to create a `LMIFunction` subclass, and include
 it as a response model in a chat completion request. 
 
-1. Create desired child class.
+1. Create desired child class. In this case, we will crfeate a class that moves a NPC to a new location 
+based on a LLM function call.
 
 ```C++
+#include <jsoncons/json.hpp>
+#include <jsoncons_ext/jsonschema/jsonschema.hpp>
+#include <string>
+#include "lmi/lmi.h"
+
 class MoveTo : public lmi::LMIFunction {
-
-
 }
 ```
 
@@ -128,7 +132,7 @@ public:
 ```
 
 5. In the implementation file, `moveTo.cpp`, define a jsoncons json which holds schema for validation.
-6. 
+
 ```C++
 #include "moveTo.h"
 
@@ -154,7 +158,12 @@ jsoncons::json Action::jsonSchema_ = json::parse(R"(
 )");
 ```
 
+## TODO: show how how to call makeOAIRequest with the `MoveTo` class created above, and get an instantiated instance of `MoveTo` as output.
 
+
+
+
+## Documentation for building the project
 
 ```shell
 cd build
