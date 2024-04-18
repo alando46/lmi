@@ -53,6 +53,8 @@ namespace lmi {
 
     public:
         virtual ~LMIFunction() = default;
+
+        virtual jsoncons::json getSchema() = 0;
     };
 
     inline void validate(jsoncons::json schema, jsoncons::json rawJson) {

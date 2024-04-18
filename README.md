@@ -6,6 +6,9 @@ a mix of functionalities similar to Python's [Pydantic](https://github.com/pydan
 
 ## Example workflow
 
+The following tutorial covers the basic tutorial to create a `LMIFunction` subclass, and include
+it as a response model in a chat completion request. 
+
 1. Create desired child class.
 
 ```C++
@@ -18,6 +21,11 @@ class MoveTo : public lmi::LMIFunction {
 2. Add required private attributes `rawJson_` and `jsonSchema_`.
 
 ```C++
+#include <jsoncons/json.hpp>
+#include <jsoncons_ext/jsonschema/jsonschema.hpp>
+#include <string>
+#include "lmi/lmi.h"
+
 class MoveTo : public lmi::LMIFunction {
 private:
     // rawJson_ is required
@@ -32,6 +40,10 @@ private:
 `setValues()`
 
 ```C++
+#include <jsoncons/json.hpp>
+#include <jsoncons_ext/jsonschema/jsonschema.hpp>
+#include <string>
+#include "lmi/lmi.h"
 
 enum class MovementStyle {
     WalkCalm,
@@ -124,24 +136,24 @@ jsoncons::json Action::jsonSchema_ = json::parse(R"(
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "MoveToSchema",
-    "description": "A basic schema for the movement function",
+    "description": "A basic schema for the moveTo function",
     "type": "object",
     "properties": {
         "destination": {
             "description": "The destination the character should move to",
-            "enum": [ "smiling", "thinking", "serious" ]
+            "enum": [ "GroceryStore1", "BillHome", "BillWork", "SueHome", "CurrentLocation" ]
             "maxLength": 5
         },
-        "facialExpression": {
-            "description": "The facial expression the character should have",
-            "enum": [ "smiling", "thinking", "serious" ]
+        "moveStyle": {
+            "description": "The style of movement the character should adhere to while moving",
+            "enum": [ "WalkCalm", "WalkFast", "Jog", "FranticSprint", "Default" ]
         }
     },
-    "required": [ "whatToSay", "facialExpression" ]
+    "required": [ "destination", "moveStyle" ]
 }
 )");
-
 ```
+
 
 
 ```shell
