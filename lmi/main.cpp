@@ -16,18 +16,31 @@
 
 int main() {
 
+//     json data = json::parse(R"(
+// {
+//   "whatToSay": "Hi I'm Bob!",
+//   "facialExpression": "laughing"
+// }
+//    )");
+
     json data = json::parse(R"(
 {
-  "whatToSay": "Hi I'm Bob!",
-  "facialExpression": "laughing"
+    "function":{
+        "arguments":"{\"facialExpression\":\"smiling\",\"whatToSay\":\"Hello, adventurer! Welcome to our mystical realm!\"}",
+        "name":"TestWhatToSaySchema"},
+        "id":"call_PcWSHzNnUgqde2K8IFgCvuGo",
+        "type":"function"
 }
-   )");
+    )");
 
-    Action action = Action::create(data);
+    std::cout << data["function"]["arguments"] << std::endl;
 
-    // how to return multiple validation errors at the same time?
-    // how does pydantic handle this?
-    // what is the most c++ way to handle this?
+
+    std::unique_ptr<Action> action_ptr = Action::create(data["function"]["arguments"]);
+
+    // std::string prompt = "You are a character in a fictitious game world. give a short greeting.";
+
+    // std::vector<std::unique_ptr<lmi::LMIFunction>> action = lmi::makeOAIRequest<Action>("gpt-4-turbo", prompt, 1, 3);
 
     return 0;
 }

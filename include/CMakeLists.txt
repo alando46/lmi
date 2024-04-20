@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
 set(LIBRARY_INCLUDES "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/${LIBRARY_NAME}" "${CMAKE_BINARY_DIR}/configured_files/include")
-# set(LIBRARY_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/validationError.h")
 add_library(${LIBRARY_NAME} STATIC ${LIBRARY_HEADERS})
 
 # specify the directories where the compiler should look for header files
@@ -16,7 +15,7 @@ target_sources(${LIBRARY_NAME} PRIVATE
 )
 
 target_link_libraries(${LIBRARY_NAME}
-    PRIVATE
+    PUBLIC
     jsoncons
     cpr::cpr
 )
