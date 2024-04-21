@@ -16,18 +16,19 @@
 
 int main() {
 
-    json data = json::parse(R"(
-{
-  "whatToSay": "Hi I'm Bob!",
-  "facialExpression": "laughing"
-}
-   )");
+    std::string prompt = "Original prompt: You are a character in a fictitious game world. give a short greeting. Use the listed functions to make a response as a valid json";
 
-    Action action = Action::create(data);
+    std::vector<std::unique_ptr<lmi::LMIFunction>> actions = lmi::makeOAIRequest<Action>("gpt-4-turbo", prompt, 1, 3);
 
-    // how to return multiple validation errors at the same time?
-    // how does pydantic handle this?
-    // what is the most c++ way to handle this?
+    for (auto& action : actions) {
+        Action* actionPtr = dynamic_cast<Action*>(action.get());
+        if (actionPtr) {  // Check if the dynamic_cast was successful
+            std::cout << "What to say: " << actionPtr->getWhatToSay() << std::endl;
+            std::cout << "Facial expression: " << actionPtr->getFacialExpression() << std::endl;
 
+        } else {
+            std::cout << "Failed to cast LMIFunction pointer to Action pointer." << std::endl;
+        }
+    }
     return 0;
 }

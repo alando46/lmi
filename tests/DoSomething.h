@@ -30,6 +30,9 @@ class Action : public lmi::LMIFunction {
             setValues();
         }
 
+        static jsoncons::json getSchema() {
+            return jsonSchema_;
+        }
         static Action create(jsoncons::json rawJson) {
             lmi::validate(jsonSchema_, rawJson);
             return Action(rawJson);

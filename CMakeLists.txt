@@ -84,7 +84,6 @@ cpmaddpackage("gh:gabime/spdlog@1.13.0")
 
 
 # SUB DIRECTORIES
-
 add_subdirectory(configured)
 add_subdirectory(lmi)
 add_subdirectory(include)

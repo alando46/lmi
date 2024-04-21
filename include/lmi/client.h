@@ -5,22 +5,30 @@
 #include <cpr/cpr.h>
 #include <string>
 
+#include <jsoncons/json.hpp>
+#include <iostream>
+
 namespace lmi {
 
-    struct LMIMessage {
-        std::string role = "user";
-        std::string content = "";
-    };
+    inline jsoncons::json openAISchemaTransform(const jsoncons::json& validationSchema) {
+        // Create new JSON object for transformed schema
+        jsoncons::json transformedSchema = jsoncons::json::object();
 
-    class BackendBase {
-        std::string& endPoint_;
-        std::string& apiKey_;
-        public:
-            BackendBase(std::string& endPoint, std::string& apiKey) : endPoint_(endPoint), apiKey_(apiKey) {}
+        // set the basic properties of the function object
+        transformedSchema["type"] = "function";
+        transformedSchema["function"] = jsoncons::json::object();
+        transformedSchema["function"]["name"] = validationSchema["title"].as<std::string>();
+        transformedSchema["function"]["description"] = validationSchema["description"].as<std::string>();
 
-            std::unique_ptr<lmi::LMIFunction> create(std::string model, LMIMessage messages, const std::vector<std::unique_ptr<LMIFunction>>& responseModel, int retries=3);
+        // set parameters for the function
+        transformedSchema["function"]["parameters"] = jsoncons::json::object({
+            {"type", "object"},
+            {"properties", validationSchema["properties"]},
+            {"required", validationSchema["required"]}
+        });
 
-    };
+        return transformedSchema;
+    }
 
 }
 
