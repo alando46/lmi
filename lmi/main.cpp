@@ -16,31 +16,19 @@
 
 int main() {
 
-//     json data = json::parse(R"(
-// {
-//   "whatToSay": "Hi I'm Bob!",
-//   "facialExpression": "laughing"
-// }
-//    )");
+    std::string prompt = "Original prompt: You are a character in a fictitious game world. give a short greeting. Use the listed functions to make a response as a valid json";
 
-    json data = json::parse(R"(
-{
-    "function":{
-        "arguments":"{\"facialExpression\":\"smiling\",\"whatToSay\":\"Hello, adventurer! Welcome to our mystical realm!\"}",
-        "name":"TestWhatToSaySchema"},
-        "id":"call_PcWSHzNnUgqde2K8IFgCvuGo",
-        "type":"function"
-}
-    )");
+    std::vector<std::unique_ptr<lmi::LMIFunction>> actions = lmi::makeOAIRequest<Action>("gpt-4-turbo", prompt, 1, 3);
 
-    std::cout << data["function"]["arguments"] << std::endl;
+    for (auto& action : actions) {
+        Action* actionPtr = dynamic_cast<Action*>(action.get());
+        if (actionPtr) {  // Check if the dynamic_cast was successful
+            std::cout << "What to say: " << actionPtr->getWhatToSay() << std::endl;
+            std::cout << "Facial expression: " << actionPtr->getFacialExpression() << std::endl;
 
-
-    std::unique_ptr<Action> action_ptr = Action::create(data["function"]["arguments"]);
-
-    // std::string prompt = "You are a character in a fictitious game world. give a short greeting.";
-
-    // std::vector<std::unique_ptr<lmi::LMIFunction>> action = lmi::makeOAIRequest<Action>("gpt-4-turbo", prompt, 1, 3);
-
+        } else {
+            std::cout << "Failed to cast LMIFunction pointer to Action pointer." << std::endl;
+        }
+    }
     return 0;
 }
