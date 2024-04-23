@@ -2,9 +2,9 @@ name: Ubuntu CI Test
 
 on:
   push:
-    branches: [ main, master, dev ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main, master, dev ]
+    branches: [ main, dev ]
 
 jobs:
   build:
@@ -25,7 +25,5 @@ jobs:
         cmake --build build --config Debug --target coverage -j4
     - name: testing
       run: |
-        cd build
-        cd tests
-        ./unit_tests
+        ./build/tests/lmi_unit_tests
         bash <(curl -s https://codecov.io/bash)

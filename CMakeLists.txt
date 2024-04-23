@@ -90,13 +90,13 @@ add_subdirectory(include)
 add_subdirectory(tests)
 # INSTALL TARGETS
 
-install(
-    TARGETS ${EXECUTABLE_NAME}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin)
+# install(
+#     TARGETS ${EXECUTABLE_NAME}
+#     ARCHIVE DESTINATION lib
+#     LIBRARY DESTINATION lib
+#     RUNTIME DESTINATION bin)
 
-install(
-    TARGETS ${LIBRARY_NAME}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib)
+# install(
+#     TARGETS ${LIBRARY_NAME}
+#     ARCHIVE DESTINATION lib
+#     LIBRARY DESTINATION lib)
