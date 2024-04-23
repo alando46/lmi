@@ -13,7 +13,7 @@
         "whatToSay": {
             "description": "The dialog that should be said",
             "type": "string",
-            "maxLength": 20
+            "maxLength": 60
         },
         "facialExpression": {
             "description": "The facial expression the character should have",

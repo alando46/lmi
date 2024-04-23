@@ -61,7 +61,6 @@ namespace lmi {
     inline void validate(jsoncons::json schema, jsoncons::json rawJson) {
         std::string output;
         jsoncons::encode_json(schema, output, jsoncons::indenting::indent);
-        std::cout << output << std::endl;
         // need to load json schema into a json_schema object
         // Throws schema_error if JSON Schema loading fails
         auto sch = jsonschema::make_schema(schema);

@@ -30,11 +30,6 @@ class Action : public lmi::LMIFunction {
             setValues();
         }
 
-        // static Action create(jsoncons::json rawJson) {
-        //     lmi::validate(jsonSchema_, rawJson);
-        //     return Action(rawJson);
-        // };
-
         static std::unique_ptr<Action> create(jsoncons::json rawJson) {
             lmi::validate(jsonSchema_, rawJson);
             return std::make_unique<Action>(rawJson);
