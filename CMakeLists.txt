@@ -85,9 +85,20 @@ cpmaddpackage("gh:gabime/spdlog@1.13.0")
 
 # SUB DIRECTORIES
 add_subdirectory(configured)
-add_subdirectory(lmi)
 add_subdirectory(include)
 add_subdirectory(tests)
+
+# add lmi subdirectory for development only
+set(SUBDIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lmi")
+# Check if the subdirectory exists
+if(EXISTS ${SUBDIR_PATH})
+    # Add the subdirectory to the build
+    add_subdirectory(${SUBDIR_PATH})
+else()
+    message(STATUS "Subdirectory ${SUBDIR_PATH} not found, skipping.")
+endif()
+
+
 # INSTALL TARGETS
 
 # install(
