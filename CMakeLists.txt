@@ -30,6 +30,16 @@ option(ENABLE_LTO "Enable to add Link Time Optimization." ON)
 set(LIBRARY_NAME "lmi")
 set(UNIT_TEST_NAME "lmi_unit_tests")
 
+# debug for msvc
+foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
+    set_target_properties(lmi PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/lib"
+        LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/lib"
+        RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/bin"
+    )
+endforeach()
+
 # CMAKE MODULES
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
 include(ConfigSafeGuards)
@@ -62,8 +72,6 @@ include(FetchContent)
 FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
                          GIT_TAG 3b15fa82ea74739b574d705fea44959b58142eb8)
 FetchContent_MakeAvailable(cpr)
-
-Include(FetchContent)
 
 FetchContent_Declare(
   Catch2
