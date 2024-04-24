@@ -29,7 +29,6 @@ option(ENABLE_LTO "Enable to add Link Time Optimization." ON)
 # Project/Library Names
 set(LIBRARY_NAME "lmi")
 set(UNIT_TEST_NAME "lmi_unit_tests")
-set(EXECUTABLE_NAME "main")
 
 # CMAKE MODULES
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
@@ -90,8 +89,9 @@ add_subdirectory(tests)
 
 # add lmi subdirectory for development only
 set(SUBDIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lmi")
-# Check if the subdirectory exists
 if(EXISTS ${SUBDIR_PATH})
+    # executable is only for development
+    set(EXECUTABLE_NAME "main")
     # Add the subdirectory to the build
     add_subdirectory(${SUBDIR_PATH})
 else()
