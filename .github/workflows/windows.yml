@@ -19,7 +19,7 @@ jobs:
         cmake -H"." -Bbuild -T host=x86 -A x64 -DCMAKE_BUILD_TYPE="Debug"
     - name: building
       run: |
-        cmake --build build --config Debug --target lmi_unit_tests -j4
+        cmake --build build --config Debug --target lmi_unit_tests -j8
     - name: testing
       run: |
         .\build\tests\Debug\lmi_unit_tests.exe
