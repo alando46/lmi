@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 
 set(LIBRARY_INCLUDES "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/${LIBRARY_NAME}" "${CMAKE_BINARY_DIR}/configured_files/include")
-add_library(${LIBRARY_NAME} STATIC ${LIBRARY_HEADERS})
-
+# add_library(${LIBRARY_NAME} STATIC ${LIBRARY_HEADERS})
+add_library(${LIBRARY_NAME} INTERFACE)
 # specify the directories where the compiler should look for header files
 # when compiling the target named `lmi`.
-target_include_directories(${LIBRARY_NAME} PUBLIC ${LIBRARY_INCLUDES})
+target_include_directories(${LIBRARY_NAME} INTERFACE ${LIBRARY_INCLUDES})
 
 # include headers here for ide completion
 target_sources(${LIBRARY_NAME} PRIVATE
@@ -15,7 +15,7 @@ target_sources(${LIBRARY_NAME} PRIVATE
 )
 
 target_link_libraries(${LIBRARY_NAME}
-    PUBLIC
+    INTERFACE
     jsoncons
     cpr::cpr
 )

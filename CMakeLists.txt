@@ -22,23 +22,23 @@ option(ENABLE_SANITIZE_ADDR "Enable address sanitize." OFF)
 option(ENABLE_SANITIZE_UNDEF "Enable undefined sanitize." OFF)
 option(ENABLE_SANITIZE_LEAK "Enable leak sanitize (Gcc/Clang only)." OFF)
 option(ENABLE_SANITIZE_THREAD "Enable thread sanitize (Gcc/Clang only)." OFF)
-option(ENABLE_CLANG_FORMAT "Enable to add clang-format." ON)
-option(ENABLE_CMAKE_FORMAT "Enable to add cmake-format." ON)
-option(ENABLE_LTO "Enable to add Link Time Optimization." ON)
+option(ENABLE_CLANG_FORMAT "Enable to add clang-format." OFF)
+option(ENABLE_CMAKE_FORMAT "Enable to add cmake-format." OFF)
+option(ENABLE_LTO "Enable to add Link Time Optimization." OFF)
 
 # Project/Library Names
 set(LIBRARY_NAME "lmi")
 set(UNIT_TEST_NAME "lmi_unit_tests")
 
 # debug for msvc
-foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-    string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
-    set_target_properties(lmi PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/lib"
-        LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/lib"
-        RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/bin"
-    )
-endforeach()
+# foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
+#     string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
+#     set_target_properties(lmi PROPERTIES
+#         ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/lib"
+#         LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/lib"
+#         RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/bin"
+#     )
+# endforeach()
 
 # CMAKE MODULES
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
@@ -78,9 +78,8 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
   GIT_TAG        v3.5.3
 )
-
+Include(FetchContent)
 FetchContent_MakeAvailable(Catch2)
-
 
 message(STATUS "Using CPM")
 include(CPM)
