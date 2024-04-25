@@ -22,4 +22,4 @@ jobs:
         cmake --build build --config Debug --target lmi_unit_tests -j4
     - name: testing
       run: |
-        ./build/tests/lmi_unit_tests
+        .\build\tests\Debug\lmi_unit_tests.exe

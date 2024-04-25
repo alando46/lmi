@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 
 set(LIBRARY_INCLUDES "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/${LIBRARY_NAME}" "${CMAKE_BINARY_DIR}/configured_files/include")
+# note: header only library must be set to INTERFACE for add_library and target_include_directories
+# change back to static if source files are added
 # add_library(${LIBRARY_NAME} STATIC ${LIBRARY_HEADERS})
 add_library(${LIBRARY_NAME} INTERFACE)
 # specify the directories where the compiler should look for header files

@@ -84,7 +84,6 @@ FetchContent_MakeAvailable(Catch2)
 message(STATUS "Using CPM")
 include(CPM)
 cpmaddpackage("gh:fmtlib/fmt#10.2.1")
-# cpmaddpackage("gh:catchorg/Catch2@3.5.3")
 cpmaddpackage("gh:danielaparker/jsoncons@0.173.4")
 cpmaddpackage("gh:gabime/spdlog@1.13.0")
 
