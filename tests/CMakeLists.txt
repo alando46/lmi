@@ -9,6 +9,17 @@ if(ENABLE_TESTING)
 
     target_include_directories(${UNIT_TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
+    if (MSVC)
+        add_custom_command(TARGET lmi_unit_tests POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/_deps/curl-build/lib/Debug/libcurl-d.dll"
+                "${CMAKE_BINARY_DIR}/_deps/cpr-build/cpr/Debug/cpr.dll"
+                "${CMAKE_BINARY_DIR}/_deps/catch2-build/src/Debug/Catch2Maind.dll"
+                "${CMAKE_BINARY_DIR}/_deps/catch2-build/src/Debug/Catch2d.dll"
+                $<TARGET_FILE_DIR:lmi_unit_tests>
+        )
+    endif()
+
     target_set_warnings(
         TARGET
         ${UNIT_TEST_NAME}
