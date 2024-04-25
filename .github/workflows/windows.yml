@@ -2,9 +2,9 @@ name: Windows CI Test
 
 on:
   push:
-    branches: [ main, master, dev ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main, master, dev ]
+    branches: [ main, dev ]
 
 jobs:
   build:
@@ -19,10 +19,7 @@ jobs:
         cmake -H"." -Bbuild -T host=x86 -A x64 -DCMAKE_BUILD_TYPE="Debug"
     - name: building
       run: |
-        cmake --build build --config Debug --target unit_tests -j4
+        cmake --build build --config Debug --target lmi_unit_tests -j8
     - name: testing
       run: |
-        cd build
-        cd tests
-        cd Debug
-        .\unit_tests.exe
+        .\build\tests\Debug\lmi_unit_tests.exe

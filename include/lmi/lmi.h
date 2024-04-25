@@ -130,16 +130,8 @@ namespace lmi {
 
             // extract just tool calls from response
             jsoncons::json rj = jsoncons::json::parse(r.text);
-            // std::cout << "JSON response: " << rj << std::endl;
 
             jsoncons::json rawJson = rj["choices"][0]["message"]["tool_calls"];
-
-            // std::cout <<"rawJson is : " << std::endl;
-
-            // std::cout << rawJson << std::endl << std::endl;
-
-            // std::cout <<"tool_calls: " << std::endl;
-            // std::cout <<rj["choices"][0]["message"]["tool_calls"][0]<<std::endl;
 
             auto tryCreateLambda = [&rawJson, &validResponses, &errorPrompt](auto wrapper) {
                 for (jsoncons::json func : rawJson.array_range()) {

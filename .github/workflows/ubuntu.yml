@@ -2,9 +2,9 @@ name: Ubuntu CI Test
 
 on:
   push:
-    branches: [ main, master, dev ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main, master, dev ]
+    branches: [ main, dev ]
 
 jobs:
   build:
@@ -22,10 +22,7 @@ jobs:
         cmake -H. -Bbuild -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=On
     - name: building
       run: |
-        cmake --build build --config Debug --target coverage -j4
+        cmake --build build --config Debug --target lmi_unit_tests -j8
     - name: testing
       run: |
-        cd build
-        cd tests
-        ./unit_tests
-        bash <(curl -s https://codecov.io/bash)
+        ./build/tests/lmi_unit_tests
